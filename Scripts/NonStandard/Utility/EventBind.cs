@@ -73,9 +73,20 @@ namespace NonStandard.Utility.UnityEditor {
 			return obj != null && IsAlreadyBound(@event, obj, methodName);
 		}
 		public static bool IsAlreadyBound(UnityEventBase @event, UnityEngine.Object target, string methodName) {
+			return GetPersistentEventIndex(@event, target, methodName) >= 0;
+		}
+		public static int GetPersistentEventIndex(UnityEventBase @event, UnityEngine.Object target, string methodName) {
 			for (int i = 0; i < @event.GetPersistentEventCount(); ++i) {
-				if (@event.GetPersistentTarget(i) == target && @event.GetPersistentMethodName(i) == methodName) { return true; }
+				if (@event.GetPersistentTarget(i) == target && @event.GetPersistentMethodName(i) == methodName) { return i; }
 			}
+			return -1;
+		}
+		public static bool Remove(UnityEventBase @event, UnityEngine.Object target, string methodName) {
+			int index = GetPersistentEventIndex(@event, target, methodName);
+			if (index >= 0) {
+				UnityEventTools.RemovePersistentListener(@event, index);
+				return true;
+            }
 			return false;
 		}
 		public static bool IfNotAlready(UnityEvent @event, UnityEngine.Object target, string methodName) {

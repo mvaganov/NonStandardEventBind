@@ -89,6 +89,11 @@ namespace NonStandard {
             }
 			return false;
 		}
+		public static void Clear(UnityEventBase @event) {
+			while (@event.GetPersistentEventCount() > 0) {
+				UnityEventTools.RemovePersistentListener(@event, @event.GetPersistentEventCount() - 1);
+			}
+		}
 		public static bool IfNotAlready(UnityEvent @event, UnityEngine.Object target, string methodName) {
 			if (IsAlreadyBound(@event, target, methodName)) return false;
 			On(@event, target, methodName);
@@ -159,5 +164,4 @@ namespace NonStandard {
 			return t+"."+methodName;
 		}
 	}
-
 }
